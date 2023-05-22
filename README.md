@@ -1,6 +1,6 @@
 # Todo List with React
 這是一個使用React打造的Todo List
-![ todo list](./ac-todo-list)
+![ todo list](./ac-todo-list.png)
 # 功能
 使用者可以使用新增、編輯、已完成或刪除todo
 # 開始使用
