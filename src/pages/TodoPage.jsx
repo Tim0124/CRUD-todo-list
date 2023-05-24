@@ -1,74 +1,79 @@
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getTodos, createTodo, patchTodo, deleteTodo } from '../api/todos';
+import {checkPermission} from 'api/auth'
+import { useNavigate } from 'react-router-dom';
 
-const dummyTodos = [
-  {
-    title: 'Learn react-router',
-    isDone: true,
-    id: 1,
-  },
-  {
-    title: 'Learn to create custom hooks',
-    isDone: false,
-    id: 2,
-  },
-  {
-    title: 'Learn to use context',
-    isDone: true,
-    id: 3,
-  },
-  {
-    title: 'Learn to implement auth',
-    isDone: false,
-    id: 4,
-  },
-];
+
 
 const TodoPage = () => {
   const [inputValue, setInputValue] = useState('')
-  const [todos, setTodos] = useState(dummyTodos)
+  const [todos, setTodos] = useState([])
+  const navigate = useNavigate()
 
   const handleChange = (value) => {
     setInputValue(value)
   }
 
-  const handleAddTodo = () => {
+  const handleAddTodo = async () => {
     if (inputValue.length === 0) {
       return
     }
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          id: Math.random() * 100,
-          title: inputValue,
-          isDone: false
-        },
-      ];
-    })
-
-    setInputValue('')
+    try{
+      const data = await createTodo({
+        title: inputValue,
+        isDone: false,
+      });
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            id: data.id,
+            title: data.title,
+            isDone: data.isDone,
+            isEdit: false,
+          },
+        ];
+      });
+      setInputValue('');
+    }catch(err) {
+      console.error(err)
+    } 
   }
 
-  const handleKeyDown = () => {
+  const handleKeyDown = async () => {
     if (inputValue.length === 0) {
       return;
     }
-    setTodos((prevTodos) => {
-      return [
-        ...prevTodos,
-        {
-          id: Math.random() * 100,
-          title: inputValue,
-          isDone: false,
-        },
-      ];
-    });
-
-    setInputValue('');
+    try{
+      const data = await createTodo({
+        title: inputValue,
+        isDone: false,
+      });
+      setTodos((prevTodos) => {
+        return [
+          ...prevTodos,
+          {
+            id: data.id,
+            title: data.title,
+            isDone: data.isDone,
+            isEdit: false,
+          },
+        ];
+      });
+      setInputValue('');
+    }catch(err) {
+      console.error(err)
+    } 
   }
 
-  const handleToggleDone = (id) => {
+  const handleToggleDone = async(id) => {
+    try {
+      const currentTodo = todos.find((todo) => todo.id === id)
+    await patchTodo ({
+      id,
+      isDone: !currentTodo.isDone
+    })
     setTodos((prevTodos) => {
       return prevTodos.map((todo) => {
         if(todo.id === id) {
@@ -80,6 +85,10 @@ const TodoPage = () => {
         return todo;
       });
     })
+    } catch (error) {
+      console.error(error)
+    }
+    
   }
 
   const handleChangeMode = ({ id, isEdit }) => {
@@ -99,7 +108,12 @@ const TodoPage = () => {
     });
   };
 
-  const handleSave = ({id, title}) => {
+  const handleSave = async ({id, title}) => {
+    try {
+      await patchTodo ({
+      id,
+      title
+    })
     setTodos((prevTodos) => {
       return prevTodos.map((todo) => {
         if (todo.id === id) {
@@ -113,15 +127,55 @@ const TodoPage = () => {
         return todo
       })
     })
+    } catch (err) {
+      console.error(err)
+    }
+    
   }
 
-  const handleDelete = ({id}) => {
+  const handleDelete = async ({id}) => {
+    try {
+      await deleteTodo(id)
+    
     setTodos((prevTodos) => {
       return prevTodos.filter((todo) => {
         return todo.id !== id
       })
     })
+    } catch (err) {
+      console.error(err)
+    }
+    
   }
+
+  useEffect(() => {
+    const getTodosAsync = async () => {
+      try{
+        const todos = await getTodos()
+        setTodos(todos.map((todo) => ({...todo, isEdit:false})))
+
+      } catch (err) {
+        console.error(err)
+      }
+      
+    }
+    getTodosAsync()
+  },[])
+
+    useEffect(() => {
+      const checkTokenIsValid = async () => {
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+          navigate('/login')
+        }
+        const result = await checkPermission(authToken);
+
+        if (!result) {
+          navigate('/login');
+        }
+      };
+      checkTokenIsValid();
+    }, [navigate]);
 
   return (
     <div>

@@ -1,0 +1,34 @@
+{
+  "todos": [
+    {
+      "title": "Learn react-router",
+      "isDone": true,
+      "id": 1
+    },
+    {
+      "title": "Learn to create custom hooks over",
+      "isDone": true,
+      "id": 2
+    },
+    {
+      "title": "Learn to use context",
+      "isDone": true,
+      "id": 3
+    },
+    {
+      "title": "Learn to implement auth",
+      "isDone": false,
+      "id": 4
+    },
+    {
+      "title": "test patchTodo",
+      "isDone": false,
+      "id": 5
+    },
+    {
+      "title": "learn something",
+      "isDone": false,
+      "id": 6
+    }
+  ]
+}
