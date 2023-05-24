@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAuth } from 'contexts/AuthContext';
 
 const StyledFooter = styled.footer`
   display: flex;
@@ -33,10 +33,10 @@ const StyledButton = styled.button`
 `;
 
 const Footer = ({onCount}) => {
-  const navigate = useNavigate()
+  const {logout} = useAuth()
+
   const handleClick = () => {
-    localStorage.removeItem('authToken');
-    navigate('/login')
+    logout()
   }
 
 
