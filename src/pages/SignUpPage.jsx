@@ -7,19 +7,19 @@ import {
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
 import { useEffect, useState } from 'react';
-import {Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useAuth } from 'contexts/AuthContext';
 
-const SignUpPage =  () => {
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const navigate = useNavigate()
-
+const SignUpPage = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
   const { register, isAuthenticated } = useAuth();
 
   const handleClick = async () => {
+    console.log(username, email, password);
     if (username.length === 0) {
       return;
     }
@@ -29,13 +29,14 @@ const SignUpPage =  () => {
     if (email.length === 0) {
       return;
     }
+
     const success = await register({
       username,
       email,
       password,
     });
-
-    if(success) {
+    console.log(success);
+    if (success) {
       Swal.fire({
         title: '註冊成功',
         icon: 'success',

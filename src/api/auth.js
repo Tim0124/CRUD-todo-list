@@ -9,8 +9,6 @@ export const login = async ({username, password}) => {
     password
   })
 
-  console.log(data)
-
   const {authToken} = data
 
   if (authToken) {
@@ -26,12 +24,12 @@ export const login = async ({username, password}) => {
 export const register = async ({username, email, password}) => {
   try {
     const { data } = await axios.post(`${authURL}/register`, {
-    username,
-    email,
-    password
-  })
-  const {authToken} = data
-
+      username,
+      email,
+      password
+    })
+  const { authToken } = data
+    console.log(username,email,password)
   if(authToken) {
     return {success:true, ...data}
   }
@@ -50,6 +48,7 @@ export const checkPermission = async (authToken) => {
         Authorization: 'Bearer ' + authToken,
       }
     })
+
     return response.data.success
   } catch (error) {
     console.error('[Check Permission Failed]:', error)

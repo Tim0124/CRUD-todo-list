@@ -4,7 +4,7 @@ import { register, login, checkPermission } from 'api/auth';
 import * as jwt from 'jsonwebtoken'
 
 
-const defaulAuthContext = {
+const defaultAuthContext = {
   isAuthenticated: false,
   currentMember: null,
   register:null,
@@ -12,7 +12,7 @@ const defaulAuthContext = {
   logout:null,
 }
 
-const AuthContext = createContext(defaulAuthContext);
+const AuthContext = createContext(defaultAuthContext);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({children}) => {
@@ -52,10 +52,12 @@ export const AuthProvider = ({children}) => {
         register: async(data) => {
           const { success, authToken } = await register({
             username: data.username,
-            email: data.emil,
+            email: data.email,
             password:data.password
           })
+          console.log(data)
           const temPayload = jwt.decode(authToken);
+      
           if (temPayload) {
             setPayload(temPayload)
             setIsAuthenticated(true)

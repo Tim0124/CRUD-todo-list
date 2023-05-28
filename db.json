@@ -7,7 +7,7 @@
     },
     {
       "title": "Learn to create custom hooks over",
-      "isDone": true,
+      "isDone": false,
       "id": 2
     },
     {
@@ -19,16 +19,6 @@
       "title": "Learn to implement auth",
       "isDone": false,
       "id": 4
-    },
-    {
-      "title": "test patchTodo",
-      "isDone": false,
-      "id": 5
-    },
-    {
-      "title": "learn something",
-      "isDone": false,
-      "id": 6
     }
   ]
 }
